@@ -1,3 +1,5 @@
+$prefix
+
 module load python3/recommended
 
 
@@ -5,4 +7,4 @@ cd $job_results
 
 export PYTHONPATH=$PYTHONPATH:$linked_gp_location
 
-python3 $linked_gp_location/$script $simulation_args_list
+python3 $linked_gp_location/$run_file $simulation_args_list
