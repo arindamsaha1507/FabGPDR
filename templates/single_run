@@ -5,4 +5,4 @@ cd $job_results
 
 export PYTHONPATH=$PYTHONPATH:$linked_gp_location
 
-python3 $linked_gp_location/compare_dimension_reductions.py --output_file output_log_test.csv
+python3 $linked_gp_location/$script $simulation_args_list

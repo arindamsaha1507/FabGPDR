@@ -1,2 +1,15 @@
+default:
+
+  simulation_args:
+    num_input_samples: 20
+    num_grid_points_per_side: 100
+    num_reduced_dimensions: 3
+    weight_parameter: 20
+    seed: 1
+    output_file: output_log.csv
+
+localhost:
+  linked_gp_location: "/home/arindam/Myriad/linked_gp"
+
 myriad:
   linked_gp_location: "/home/ucakahb/linked_gp"
