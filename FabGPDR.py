@@ -22,9 +22,9 @@ def submit_job(
     config,
     script,
     label,
-    wall_time="0:15:0",
+    wall_time="1:00:0",
     memory="4G",
-    cores=1,
+    cores=16,
     **args,
 ):
     """Submit a job to the cluster."""
@@ -64,17 +64,45 @@ def gpdr_ensemble(
     ensemble_size=200,
     ensemble_parameter="seed",
     run_file="compare_dimension_reductions.py",
+    scanning_parameter=None,
+    label="ensemble_test",
     **args,
 ):
     """Ensemble run of the GPDR model."""
+    # pylint: disable=too-many-arguments
 
     prefix = f"#$ -t 1-{ensemble_size}\n"
     update_environment(args, {"run_file": run_file, "prefix": prefix})
     with_config(config)
 
+    if scanning_parameter:
+        args = scanning_parameter
+
     set_simulation_args_list(args, {"ensemble_parameter": ensemble_parameter})
 
-    submit_job(config, "single_run", "ensemble_test", **args)
+    submit_job(config, "single_run", label, **args)
+
+
+@task
+@load_plugin_env_vars("FabGPDR")
+def gpdr_scan_parameter(config, scan_parameter, start, end, step, **args):
+    """Scan a parameter of the GPDR model."""
+
+    start = int(start)
+    end = int(end)
+    step = int(step)
+
+    value = start
+
+    while value <= end:
+        print(f"Scanning parameter {scan_parameter} with value {value}")
+        gpdr_ensemble(
+            config,
+            scanning_parameter={scan_parameter: value},
+            label=f"{scan_parameter}_scan",
+            **args,
+        )
+        value += step
 
 
 def set_simulation_args_list(*dicts):
