@@ -2,6 +2,8 @@
 
 # pylint: disable=invalid-name
 
+import os
+
 from fabsim.base.fab import (
     update_environment,
     load_plugin_env_vars,
@@ -103,6 +105,24 @@ def gpdr_scan_parameter(config, scan_parameter, start, end, step, **args):
             **args,
         )
         value += step
+
+
+@task
+@load_plugin_env_vars("FabGPDR")
+def run_external_command(command, machine, **args):
+    """Run an external command."""
+
+    ss = ""
+
+    for key, value in args.items():
+        if ss == "":
+            ss = f"{key}={value}"
+        else:
+            ss += f",{key}={value}"
+
+
+    print(f"fabsim {machine} {command}:{ss}")
+    os.system(f"fabsim {machine} {command}:{ss}")
 
 
 def set_simulation_args_list(*dicts):
